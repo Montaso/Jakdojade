@@ -26,6 +26,11 @@ const String& City::GetName() const
 void City::SetNext(City*& nextCity)
 {
 	this->next = nextCity;
+}
+
+City::~City()
+{
+	
 };
 
 City_List::City_List() : head(nullptr), size(0) {};
@@ -74,4 +79,13 @@ const int& City_List::GetSize() const
 	return this->size;
 }
 
-City_List::~City_List() {};
+City_List::~City_List() 
+{
+	City* tmp = head;
+	while (tmp != nullptr)
+	{
+		City* next = tmp->GetNext();
+		delete tmp;
+		tmp = next;
+	}
+};

@@ -20,9 +20,13 @@ void Connection::SetNext(Connection*& nextCon)
 Connection::~Connection()
 {
 	delete[] this->connected;
+	this->connected = nullptr;
 	this->roadLength = 0;
 
-	delete[] this->next;
+	if (this->next != nullptr)
+	{
+		delete[] this->next;
+	}
 };
 
 
@@ -53,4 +57,14 @@ void Connection_List::pushBack(const Connection& newConnection)
 	this->size++;
 }
 
-Connection_List::~Connection_List() {};
+Connection_List::~Connection_List() 
+{
+	Connection* tmp = head;
+	while (tmp != nullptr)
+	{
+		Connection* next = tmp->GetNext();
+		delete tmp;
+		tmp = next;
+	}
+	
+};

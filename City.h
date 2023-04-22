@@ -20,6 +20,8 @@ public:
 	const String& GetName() const;
 
 	void SetNext(City*& nextCity);
+
+	~City();
 };
 
 class City_List

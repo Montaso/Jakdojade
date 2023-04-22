@@ -4,8 +4,7 @@
 #define HASHMAP_ARR_SIZE 100
 class Hashmap
 {
-	City_List* cityListArr;
-
+	City_List** cityListArr;
 	int Hash(const String& key);
 
 public:
@@ -14,6 +13,6 @@ public:
 	void Insert(City* newCity);
 	City_List* operator[] (const size_t& index) const;
 
-
+	~Hashmap();
 };
 
