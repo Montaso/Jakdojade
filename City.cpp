@@ -1,9 +1,11 @@
 #include "City.h"
 #include <iostream>
 
-City::City() : name(""), next(nullptr) {}
-City::City(const String& name) : name(name), next(nullptr) {}
-City::City(const char*& name) : name(name), next(nullptr) {}
+City::City() : name(""), next(nullptr), x(-1), y(-1) {}
+City::City(const String& name) : name(name), next(nullptr), x(-1), y(-1) {}
+City::City(const char*& name) : name(name), next(nullptr), x(-1), y(-1) {}
+City::City(const String& name, const int& x, const int& y) : name(name), next(nullptr), x(x), y(y) {}
+City::City(const char*& name, const int& x, const int& y) : name(name), next(nullptr), x(x), y(y) {}
 
 void City::AddConnection(const Connection& newConnection)
 {

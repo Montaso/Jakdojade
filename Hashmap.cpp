@@ -3,11 +3,20 @@
 int Hashmap::Hash(const String& key)
 {
 	int hash_val = 0;
-	for (int i = 0; i < key.Size(); i++)
+	for (int i = 0; key[i] != '\0'; i++)
 	{
-		hash_val += key[i];
+		char sign = key[i];
+		if (sign >= '0' and sign <= '9')
+		{
+			hash_val += (sign - '0') * i;
+		}
+		else
+		{
+			hash_val += (sign - 'A' + 10) * i;
+		}
+		
 	}
-	return hash_val % key.Size();
+	return hash_val % HASHMAP_ARR_SIZE;
 }
 
 Hashmap::Hashmap()
@@ -36,6 +45,17 @@ void Hashmap::Insert(City* newCity)
 City_List* Hashmap::operator[](const size_t& index) const
 {
 	return cityListArr[index];
+}
+
+void Hashmap::WriteListSizes()
+{
+	for (int i = 0; i < HASHMAP_ARR_SIZE; i++)
+	{
+		if (cityListArr[i] != nullptr)
+		{
+			std::cout << cityListArr[i]->GetSize() << std::endl;
+		}
+	}
 }
 
 Hashmap::~Hashmap()

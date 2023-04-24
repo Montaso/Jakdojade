@@ -5,6 +5,7 @@
 class City
 {
 	String name;
+	int x, y;
 	Connection_List connections;
 	City* next;
 
@@ -12,6 +13,8 @@ public:
 	City();
 	City(const String& name);
 	City(const char*& name);
+	City(const String& name, const int& x, const int& y);
+	City(const char*& name, const int& x, const int& y);
 
 	void AddConnection(const Connection& newConnection);
 	void AddConnection(City* city, const int& roadLength);
