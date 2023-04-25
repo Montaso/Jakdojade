@@ -6,7 +6,7 @@ class City
 {
 	String name;
 	int x, y;
-	Connection_List connections;
+	Connection_List* connections;
 	City* next;
 
 public:

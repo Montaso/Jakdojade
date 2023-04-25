@@ -1,20 +1,28 @@
 #include "City.h"
 #include <iostream>
 
-City::City() : name(""), next(nullptr), x(-1), y(-1) {}
-City::City(const String& name) : name(name), next(nullptr), x(-1), y(-1) {}
-City::City(const char*& name) : name(name), next(nullptr), x(-1), y(-1) {}
-City::City(const String& name, const int& x, const int& y) : name(name), next(nullptr), x(x), y(y) {}
-City::City(const char*& name, const int& x, const int& y) : name(name), next(nullptr), x(x), y(y) {}
+City::City() : name(""), next(nullptr), x(-1), y(-1), connections(nullptr) {}
+City::City(const String& name) : name(name), next(nullptr), x(-1), y(-1), connections(nullptr) {}
+City::City(const char*& name) : name(name), next(nullptr), x(-1), y(-1), connections(nullptr) {}
+City::City(const String& name, const int& x, const int& y) : name(name), next(nullptr), x(x), y(y), connections(nullptr) {}
+City::City(const char*& name, const int& x, const int& y) : name(name), next(nullptr), x(x), y(y), connections(nullptr) {}
 
 void City::AddConnection(const Connection& newConnection)
 {
-	connections.pushBack(newConnection);
+	if (connections == nullptr)
+	{
+		connections = new Connection_List();
+	}
+	connections->pushBack(newConnection);
 }
 void City::AddConnection(City* city, const int& roadLength)
 {
+	if (connections == nullptr)
+	{
+		connections = new Connection_List();
+	}
 	Connection* newConnection = new Connection(city, roadLength);
-	connections.pushBack(*newConnection);
+	connections->pushBack(*newConnection);
 }
 City* City::GetNext() const
 {
@@ -32,7 +40,10 @@ void City::SetNext(City*& nextCity)
 
 City::~City()
 {
-	
+	if (connections != nullptr)
+	{
+		delete connections;
+	}
 };
 
 City_List::City_List() : head(nullptr), size(0) {};

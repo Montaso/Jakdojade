@@ -19,14 +19,15 @@ void Connection::SetNext(Connection*& nextCon)
 
 Connection::~Connection()
 {
-	delete[] this->connected;
+	//delete[] this->connected;
 	this->connected = nullptr;
 	this->roadLength = 0;
+	this->next = nullptr;
 
-	if (this->next != nullptr)
+	/*if (this->next != nullptr)
 	{
 		delete[] this->next;
-	}
+	}*/
 };
 
 
