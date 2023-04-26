@@ -29,7 +29,13 @@ void WorldMap::LoadMap()
 	{
 		for (int j = 0; j < cols; j++)
 		{
-			std::cin >> worldMap[i][j];
+			char newChar = getchar();
+			if (isspace(newChar))
+			{
+				j--;
+				continue;
+			}
+			worldMap[i][j] = newChar;
 			citiesMap[i][j] = nullptr;
 		}
 	}
@@ -44,6 +50,7 @@ void WorldMap::ReadCities()
 			if (worldMap[i][j] == '*')
 			{
 				String name = FindCityName(j, i);
+				//String name = "";
 				City* newCity = new City(name, j, i);
 				cities.Insert(newCity);
 				citiesMap[i][j] = newCity;
@@ -64,6 +71,67 @@ void WorldMap::ReadConnections()
 			}
 		}
 	}
+}
+
+void WorldMap::ReadFlights()
+{
+	int flights;
+	std::cin >> flights;
+	char* name1 = new char[64];
+	char* name2 = new char[64];
+	char* dstc = new char[64];
+
+	getchar();
+	for (int i = 0; i < flights; i++)
+	{
+		
+		ReadCityName(name1);
+		ReadCityName(name2);
+		//ReadCityName(dstc);
+
+		//String name1 = ReadCityName();
+		//String name2 = ReadCityName();
+		String distance = ReadCityName();
+		int distanceI = distance.toNumber();
+		
+		String name1_S(name1);
+		String name2_S(name2);
+
+		City* left = cities.FindCity(name1_S);
+		City* right = cities.FindCity(name2_S);
+
+		left->AddConnection(right, distanceI);
+
+		//if ((i+1) % 100000 == 0) printf("%d\n", i+1);
+		//printf("added connection between: %s, and %s\n", name1.getVal(), name2.getVal());
+		/*printf("%s\n", name1.getVal());
+		printf("%s\n", name2.getVal());
+		printf("%d\n\n", distanceI);*/
+	}
+	delete[] name1;
+	delete[] name2;
+	delete[] dstc;
+}
+
+void WorldMap::PerformPathFinding()
+{
+	int count;
+	std::cin >> count;
+	getchar();
+	for (int i = 0; i < count; i++)
+	{
+		String name1 = ReadCityName();
+		String name2 = ReadCityName();
+		char mode = getchar();
+		
+		String name1_S(name1);
+		String name2_S(name2);
+
+		City* left = cities.FindCity(name1_S);
+		City* right = cities.FindCity(name2_S);
+
+	}
+
 }
 
 String WorldMap::FindCityName(const int& x, const int& y)
@@ -145,6 +213,46 @@ bool WorldMap::IsVisitedRoad(const int& x, const int& y)
 	return false;
 }
 
+String WorldMap::ReadCityName()
+{
+	String newName;
+	char newChar;
+	while (true)
+	{
+		newChar = getchar();
+		if (!isspace(newChar))
+		{
+			newName += newChar;
+		}
+		else
+		{
+			break;
+		}
+	}
+	return newName;
+}
+
+void WorldMap::ReadCityName(char* cityName)
+{
+	int i = 0;
+	//char tmp;
+	while (true)
+	{
+		cityName[i] = getchar();
+		//tmp = getchar();
+		if (cityName[i] == ' ' || cityName[i] == '\n')
+		{
+			cityName[i] = '\0';
+			break;
+		}
+		else
+		{
+			i++;
+		}
+	}
+	//return cityName;
+}
+
 void WorldMap::FindNeighboursBFS(const Position& startPos)
 {
 	RoadQueue queue;
@@ -169,15 +277,15 @@ void WorldMap::FindNeighboursBFS(const Position& startPos)
 				if (IsVisitedRoad(newPos.x, newPos.y) == false)
 				{
 					queue.Enqueue(newPos, queue.Peek()->GetDistance() + 1);
-					visitedPositions.Insert(newPos);
-					visitedRoad[newPos.y][newPos.x] = true;
 				}
-				else if(worldMap[newPos.y][newPos.x] == '*' && !(newPos.x == startPos.x && newPos.y == startPos.y))
+				else if(visitedRoad[newPos.y][newPos.x] == false && worldMap[newPos.y][newPos.x] == '*' && !(newPos.x == startPos.x && newPos.y == startPos.y))
 				{
 					citiesMap[startPos.y][startPos.x]->AddConnection(citiesMap[newPos.y][newPos.x], queue.Peek()->GetDistance()+1);
 					std::cout << "new connection from: (" << startPos.x << ", " << startPos.y << ") to (" <<
 						newPos.x << ", " << newPos.y << ") with length: " << queue.Peek()->GetDistance() + 1 << std::endl;
 				}
+				visitedPositions.Insert(newPos);
+				visitedRoad[newPos.y][newPos.x] = true;
 			}
 		}
 		queue.Dequeue();

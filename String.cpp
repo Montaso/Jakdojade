@@ -191,6 +191,19 @@ bool String::isNumber(const String& txt) const
 	return true;
 }
 
+int String::toNumber() const
+{
+	int sum = 0;
+	int exponent = 1;
+	for (int i = this->Size() - 2; i >= 0; i--)
+	{
+		sum += (value[i] - '0') * exponent;
+		exponent *= 10;
+	}
+
+	return sum;
+}
+
 String::~String()
 {
 	delete[] this->value;

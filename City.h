@@ -30,6 +30,7 @@ public:
 class City_List
 {
 	City* head;
+	City* last;
 	int size;
 public:
 	City_List();
@@ -38,6 +39,8 @@ public:
 	void pushBack(City* newCity);
 
 	City* operator[](const size_t& index) const;
+	City* operator[](const String& cityName) const;
+
 	bool IsOccupied() const;
 
 	const int& GetSize() const;

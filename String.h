@@ -27,6 +27,7 @@ public:
 	char* getVal() const;
 
 	bool isNumber(const String& txt) const;
+	int toNumber() const;
 
 	~String();
 };

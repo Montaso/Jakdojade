@@ -46,23 +46,21 @@ City::~City()
 	}
 };
 
-City_List::City_List() : head(nullptr), size(0) {};
-City_List::City_List(City*& headCity) : head(headCity), size(1) {}
+City_List::City_List() : head(nullptr), last(nullptr), size(0) {};
+City_List::City_List(City*& headCity) : head(headCity), last(headCity), size(1) {}
 
 void City_List::pushBack(City* newCity)
 {
 	if (this->head == nullptr)
 	{
 		this->head = newCity;
+		this->last = newCity;
 	}
 	else
 	{
-		City* tmp = this->head;
-		while (tmp->GetNext() != nullptr)
-		{
-			tmp = tmp->GetNext();
-		}
+		City* tmp = this->last;
 		tmp->SetNext(newCity);
+		this->last = tmp->GetNext();
 	}
 	this->size++;
 }
@@ -79,6 +77,17 @@ City* City_List::operator[](const size_t& index) const
 		tmp = tmp->GetNext();
 	}
 	return tmp;
+}
+
+City* City_List::operator[](const String& cityName) const
+{
+	City* tmp = head;
+	while (tmp != nullptr)
+	{
+		if (tmp->GetName() == cityName) return tmp;
+		tmp = tmp->GetNext();
+	}
+	return nullptr;
 }
 
 bool City_List::IsOccupied() const
