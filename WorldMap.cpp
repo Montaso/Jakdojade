@@ -1,4 +1,5 @@
 #include "WorldMap.h"
+#define CHAR_ARR_BUFOR 64
 
 WorldMap::WorldMap(const int& rows, const int& cols) : rows(rows), cols(cols), cities()
 {
@@ -77,9 +78,9 @@ void WorldMap::ReadFlights()
 {
 	int flights;
 	std::cin >> flights;
-	char* name1 = new char[64];
-	char* name2 = new char[64];
-	char* dstc = new char[64];
+	char* name1 = new char[CHAR_ARR_BUFOR];
+	char* name2 = new char[CHAR_ARR_BUFOR];
+	char* dstc = new char[CHAR_ARR_BUFOR];
 
 	getchar();
 	for (int i = 0; i < flights; i++)
@@ -87,8 +88,11 @@ void WorldMap::ReadFlights()
 		
 		ReadCityName(name1);
 		ReadCityName(name2);
-		//ReadCityName(dstc);
 
+		//std::cin >> name1;
+		//std::cin >> name2;
+		//ReadCityName(dstc);
+		//getchar();
 		//String name1 = ReadCityName();
 		//String name2 = ReadCityName();
 		String distance = ReadCityName();
@@ -96,10 +100,10 @@ void WorldMap::ReadFlights()
 		
 		String name1_S(name1);
 		String name2_S(name2);
-
+		
 		City* left = cities.FindCity(name1_S);
 		City* right = cities.FindCity(name2_S);
-
+		
 		left->AddConnection(right, distanceI);
 
 		//if ((i+1) % 100000 == 0) printf("%d\n", i+1);

@@ -22,7 +22,7 @@ void City::AddConnection(City* city, const int& roadLength)
 		connections = new Connection_List();
 	}
 	Connection* newConnection = new Connection(city, roadLength);
-	connections->pushBack(*newConnection);
+	connections->pushBack(newConnection);
 }
 City* City::GetNext() const
 {

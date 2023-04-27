@@ -3,7 +3,7 @@
 
 Connection::Connection() : connected(nullptr), roadLength(0), next(nullptr) {};
 
-Connection::Connection(City*& city, const int& roadLength) : connected(city), roadLength(roadLength), next(nullptr) {}
+Connection::Connection(City* city, const int& roadLength) : connected(city), roadLength(roadLength), next(nullptr) {}
 
 Connection::Connection(const Connection& other) : connected(other.connected), roadLength(other.roadLength), next(other.next) {}
 
@@ -32,10 +32,11 @@ Connection::~Connection()
 
 
 
-Connection_List::Connection_List() : head(nullptr), size(0) {}
+Connection_List::Connection_List() : head(nullptr), last(nullptr), size(0) {}
 Connection_List::Connection_List(Connection*& headConnection)
 {
 	this->head = headConnection;
+	this->last = headConnection;
 	this->size = 1;
 }
 
@@ -45,17 +46,38 @@ void Connection_List::pushBack(const Connection& newConnection)
 	if (this->head == nullptr)
 	{
 		this->head = newCon;
+		this->last = newCon;
 		this->size++;
 		return;
 	}
 
-	Connection* tmp = this->head;
-	while (tmp->GetNext() != nullptr)
+	Connection* tmp = this->last;
+	if(tmp != nullptr)
 	{
-		tmp = tmp->GetNext();
+		tmp->SetNext(newCon);
+		this->last = newCon;
+		this->size++;
 	}
-	tmp->SetNext(newCon);
-	this->size++;
+	
+}
+
+void Connection_List::pushBack(Connection* newConnection)
+{
+	if (this->head == nullptr)
+	{
+		this->head = newConnection;
+		this->last = newConnection;
+		this->size++;
+		return;
+	}
+
+	Connection* tmp = this->last;
+	if (tmp != nullptr)
+	{
+		tmp->SetNext(newConnection);
+		this->last = newConnection;
+		this->size++;
+	}
 }
 
 Connection_List::~Connection_List() 

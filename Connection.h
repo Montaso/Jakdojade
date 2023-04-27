@@ -10,7 +10,7 @@ class Connection
 
 public:
 	Connection();
-	Connection(City*& city, const int& roadLength);
+	Connection(City* city, const int& roadLength);
 	Connection(const Connection& other);
 
 	Connection* GetNext() const;
@@ -22,12 +22,14 @@ public:
 class Connection_List
 {
 	Connection* head;
+	Connection* last;
 	int size;
 public:
 	Connection_List();
 	Connection_List(Connection*& headConnection);
 
 	void pushBack(const Connection& newConnection);
+	void pushBack(Connection* newConnection);
 
 	~Connection_List();
 };
