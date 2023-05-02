@@ -78,33 +78,33 @@ void WorldMap::ReadFlights()
 {
 	int flights;
 	std::cin >> flights;
-	char* name1 = new char[CHAR_ARR_BUFOR];
-	char* name2 = new char[CHAR_ARR_BUFOR];
-	char* dstc = new char[CHAR_ARR_BUFOR];
+	//char* name1 = new char[CHAR_ARR_BUFOR];
+	//char* name2 = new char[CHAR_ARR_BUFOR];
+	//char* dstc = new char[CHAR_ARR_BUFOR];
 
 	getchar();
 	for (int i = 0; i < flights; i++)
 	{
 		
-		ReadCityName(name1);
-		ReadCityName(name2);
+		//ReadCityName(name1);
+		//ReadCityName(name2);
 
 		//std::cin >> name1;
 		//std::cin >> name2;
 		//ReadCityName(dstc);
 		//getchar();
-		//String name1 = ReadCityName();
-		//String name2 = ReadCityName();
+		String name1_S = ReadCityName();
+		String name2_S = ReadCityName();
 		String distance = ReadCityName();
 		int distanceI = distance.toNumber();
 		
-		String name1_S(name1);
-		String name2_S(name2);
+		//String name1_S(name1);
+		//String name2_S(name2);
 		
 		City* left = cities.FindCity(name1_S);
 		City* right = cities.FindCity(name2_S);
 		
-		left->AddConnection(right, distanceI);
+		left->AddConnection(left, right, distanceI);
 
 		//if ((i+1) % 100000 == 0) printf("%d\n", i+1);
 		//printf("added connection between: %s, and %s\n", name1.getVal(), name2.getVal());
@@ -112,12 +112,12 @@ void WorldMap::ReadFlights()
 		printf("%s\n", name2.getVal());
 		printf("%d\n\n", distanceI);*/
 	}
-	delete[] name1;
-	delete[] name2;
-	delete[] dstc;
+	//delete[] name1;
+	//delete[] name2;
+	//delete[] dstc;
 }
 
-void WorldMap::PerformPathFinding()
+void WorldMap::FindPaths()
 {
 	int count;
 	std::cin >> count;
@@ -127,13 +127,11 @@ void WorldMap::PerformPathFinding()
 		String name1 = ReadCityName();
 		String name2 = ReadCityName();
 		char mode = getchar();
-		
-		String name1_S(name1);
-		String name2_S(name2);
+		getchar();
 
-		City* left = cities.FindCity(name1_S);
-		City* right = cities.FindCity(name2_S);
-
+		City* left = cities.FindCity(name1);
+		City* right = cities.FindCity(name2);
+		DijkstraPathFind(left, right, mode);
 	}
 
 }
@@ -284,9 +282,9 @@ void WorldMap::FindNeighboursBFS(const Position& startPos)
 				}
 				else if(visitedRoad[newPos.y][newPos.x] == false && worldMap[newPos.y][newPos.x] == '*' && !(newPos.x == startPos.x && newPos.y == startPos.y))
 				{
-					citiesMap[startPos.y][startPos.x]->AddConnection(citiesMap[newPos.y][newPos.x], queue.Peek()->GetDistance()+1);
-					std::cout << "new connection from: (" << startPos.x << ", " << startPos.y << ") to (" <<
-						newPos.x << ", " << newPos.y << ") with length: " << queue.Peek()->GetDistance() + 1 << std::endl;
+					citiesMap[startPos.y][startPos.x]->AddConnection(citiesMap[startPos.y][startPos.x], citiesMap[newPos.y][newPos.x], queue.Peek()->GetDistance()+1);
+					//std::cout << "new connection from: (" << startPos.x << ", " << startPos.y << ") to (" <<
+						//newPos.x << ", " << newPos.y << ") with length: " << queue.Peek()->GetDistance() + 1 << std::endl;
 				}
 				visitedPositions.Insert(newPos);
 				visitedRoad[newPos.y][newPos.x] = true;
@@ -309,6 +307,109 @@ void WorldMap::FindNeighboursBFS(const Position& startPos)
 		std::cout << std::endl;
 	}
 	std::cout << std::endl;*/
+}
+
+void WorldMap::DijkstraPathFind(City* from, City* destination, char mode)
+{
+	PriorityQueue prioQ;
+	CityVector visited;
+	CityVector output;
+
+	City* currentCity;
+	City* destinationCity;
+	City* sourceCity;
+	Connection_List* citiesConnections = from->GetConnections();
+	if (citiesConnections == nullptr)
+	{
+		std::cout << '0' << std::endl;
+		return;
+	}
+	Connection* tmp = citiesConnections->GetHead();
+
+	while (tmp != nullptr)
+	{
+		prioQ.Enqueue(*tmp);
+		tmp = tmp->GetNext();
+	}
+	visited.Insert(from);
+	from->SetVisited(true);
+	from->SetSourceCity(nullptr);
+	from->SetDistance(0);
+
+	while (prioQ.Size() > 0)
+	{
+		currentCity = prioQ.Peek().GetConnectedCity();
+		sourceCity = prioQ.Peek().GetSourceCity();
+		if (currentCity->GetDistance() == -1)
+		{
+			int possibleDistance = prioQ.Peek().GetLength();
+			currentCity->SetSourceCity(sourceCity);
+			currentCity->SetDistance(possibleDistance);
+		}
+		else if (currentCity->GetDistance() > prioQ.Peek().GetLength())
+		{
+			currentCity->SetSourceCity(sourceCity);
+			currentCity->SetDistance(prioQ.Peek().GetLength());
+		}
+
+		if (!currentCity->Visited())
+		{
+			citiesConnections = currentCity->GetConnections();
+			if (citiesConnections != nullptr)
+			{
+				tmp = citiesConnections->GetHead();
+				while (tmp != nullptr)
+				{
+					destinationCity = tmp->GetConnectedCity();
+					if (!destinationCity->Visited())
+					{
+						Connection newCon = *tmp;
+						newCon.SetDistance(newCon.GetLength() + currentCity->GetDistance());
+						prioQ.Enqueue(newCon);
+					}
+					tmp = tmp->GetNext();
+				}
+			}
+			visited.Insert(currentCity);
+			currentCity->SetVisited(true);
+		}
+		prioQ.Dequeue();
+	}
+
+	City* tmpCity = destination->GetSourceCity();
+	if (tmpCity == nullptr)
+	{
+		mode = '0';
+	}
+	switch (mode)
+	{
+	case '0':
+		std::cout << destination->GetDistance() << std::endl;
+		break;
+	case '1':
+		do
+		{
+			output.Insert(tmpCity);
+			tmpCity = tmpCity->GetSourceCity();
+		} while (tmpCity != nullptr);
+
+		std::cout << destination->GetDistance() << ' ';
+		for (int i = output.Size() - 2; i >= 0; i--)
+		{
+			std::cout << output[i]->GetName().getVal() << ' ';
+		}
+		std::cout << std::endl;
+
+		break;
+	}
+
+	for (int i = 0; i < visited.Size(); i++)
+	{
+		visited[i]->SetVisited(false);
+		//std::cout << "Miasto: " << visited[i]->GetName().getVal() << ' ' << visited[i]->GetDistance() << std::endl;
+		visited[i]->SetDistance(-1);
+		visited[i]->SetSourceCity(nullptr);
+	}
 }
 
 void WorldMap::Draw()

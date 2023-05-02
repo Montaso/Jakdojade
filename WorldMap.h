@@ -3,6 +3,8 @@
 #include "Hashmap.h"
 #include "RoadQueue.h"
 #include "PositionVector.h"
+#include "PriorityQueue.h"
+#include "CityVector.h"
 
 class WorldMap
 {
@@ -22,7 +24,7 @@ public:
 	void ReadCities();
 	void ReadConnections();
 	void ReadFlights();
-	void PerformPathFinding();
+	void FindPaths();
 
 	String FindCityName(const int& x, const int& y);
 	bool IsInside(const int& x, const int& y);
@@ -33,6 +35,7 @@ public:
 	void ReadCityName(char* cityName);
 
 	void FindNeighboursBFS(const Position& startPos);
+	void DijkstraPathFind(City* from, City* destination, char mode);
 	void Draw();
 
 	~WorldMap();

@@ -1,5 +1,8 @@
 #include "PositionVector.h"
 
+#define VECTOR_START_BUFOR 1
+#define VECTOR_INCREASE_NUMBER 2
+
 PositionVector::PositionVector()
 {
 	pos = nullptr;
@@ -19,7 +22,7 @@ Position& PositionVector::operator[](const size_t& index) const
 
 void PositionVector::AddBuffer()
 {
-	maxSize *= 2;
+	maxSize *= VECTOR_INCREASE_NUMBER;
 	Position* tmp = pos;
 	this->pos = new Position[maxSize];
 
@@ -34,7 +37,7 @@ void PositionVector::Insert(const Position& newPos)
 {
 	if (size == 0)
 	{
-		pos = new Position[1];
+		pos = new Position[VECTOR_START_BUFOR];
 	}
 	else if (size == maxSize)
 	{

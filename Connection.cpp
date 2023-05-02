@@ -1,20 +1,40 @@
 #include "Connection.h"
 //#include "City.h"
 
-Connection::Connection() : connected(nullptr), roadLength(0), next(nullptr) {};
+Connection::Connection() : sourceCity(nullptr), connected(nullptr), roadLength(0), next(nullptr) {};
 
-Connection::Connection(City* city, const int& roadLength) : connected(city), roadLength(roadLength), next(nullptr) {}
+Connection::Connection(City* sourceCity, City* city, const int& roadLength) : sourceCity(sourceCity), connected(city), roadLength(roadLength), next(nullptr) {}
 
-Connection::Connection(const Connection& other) : connected(other.connected), roadLength(other.roadLength), next(other.next) {}
+Connection::Connection(const Connection& other) : sourceCity(other.sourceCity), connected(other.connected), roadLength(other.roadLength), next(other.next) {}
 
 Connection* Connection::GetNext() const
 {
 	return this->next;
 }
 
+const int& Connection::GetLength() const
+{
+	return roadLength;
+}
+
+City* Connection::GetSourceCity() const
+{
+	return sourceCity;
+}
+
+City* Connection::GetConnectedCity() const
+{
+	return connected;
+}
+
 void Connection::SetNext(Connection*& nextCon)
 {
 	this->next = nextCon;
+}
+
+void Connection::SetDistance(const int& newDist)
+{
+	roadLength = newDist;
 }
 
 Connection::~Connection()
@@ -38,6 +58,16 @@ Connection_List::Connection_List(Connection*& headConnection)
 	this->head = headConnection;
 	this->last = headConnection;
 	this->size = 1;
+}
+
+Connection* Connection_List::GetHead() const
+{
+	return head;
+}
+
+const int& Connection_List::Size() const
+{
+	return size;
 }
 
 void Connection_List::pushBack(const Connection& newConnection)

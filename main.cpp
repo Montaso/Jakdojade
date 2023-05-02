@@ -7,6 +7,7 @@
 #include "WorldMap.h"
 #include "RoadQueue.h"
 #include "PositionVector.h"
+#include "PriorityQueue.h"
 
 //using namespace std::chrono;
 
@@ -26,6 +27,25 @@ int main()
 
 	RoadNode* peek = testQ.Peek();
 	testQ.Dequeue();*/
+
+	/*PriorityQueue testQ;
+
+	Connection testC(nullptr, 10);
+	Connection testC2(nullptr, 20);
+	Connection testC3(nullptr, 50);
+	Connection testC4(nullptr, 5);
+	Connection testC5(nullptr, 7);
+
+	testQ.Enqueue(testC);
+	testQ.Enqueue(testC2);
+	testQ.Enqueue(testC3);
+	testQ.Enqueue(testC4);
+	testQ.Enqueue(testC5);
+	testQ.Dequeue();
+	testQ.Dequeue();
+
+	Connection tescik = testQ.Peek();*/
+
 
 	int rows, cols;
 	std::cin >> cols >> rows;
@@ -48,11 +68,15 @@ int main()
 	auto duration3 = std::chrono::duration_cast<std::chrono::microseconds>(stop3 - stop2);
 	std::cout << "Time taken by function ReadConnections(): " << duration3.count() << " microseconds" << std::endl;
 	
-
 	worldMap.ReadFlights();
 	auto stop4 = std::chrono::high_resolution_clock::now();
 	auto duration4 = std::chrono::duration_cast<std::chrono::microseconds>(stop4 - stop3);
 	std::cout << "Time taken by function ReadFlights(): " << duration4.count() << " microseconds" << std::endl;
+
+	worldMap.FindPaths();
+	auto stop5 = std::chrono::high_resolution_clock::now();
+	auto duration5 = std::chrono::duration_cast<std::chrono::microseconds>(stop5 - stop4);
+	std::cout << "Time taken by function FindPaths(): " << duration5.count() << " microseconds" << std::endl;
 
 	//std::cout << std::endl;
 	//worldMap.Draw();

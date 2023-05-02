@@ -8,6 +8,10 @@ class City
 	int x, y;
 	Connection_List* connections;
 	City* next;
+	//variables for dijkstra algorithm
+	bool visited;
+	City* sourceCity;
+	int distance;
 
 public:
 	City();
@@ -17,12 +21,19 @@ public:
 	City(const char*& name, const int& x, const int& y);
 
 	void AddConnection(const Connection& newConnection);
-	void AddConnection(City* city, const int& roadLength);
+	void AddConnection(City* source, City* city, const int& roadLength);
 
 	City* GetNext() const;
 	const String& GetName() const;
+	Connection_List* GetConnections() const;
+	const bool& Visited() const;
+	const int& GetDistance() const;
+	City* GetSourceCity() const;
 
 	void SetNext(City*& nextCity);
+	void SetVisited(const bool& isVisited);
+	void SetDistance(const int& newDist);
+	void SetSourceCity(City* newSourceCity);
 
 	~City();
 };
